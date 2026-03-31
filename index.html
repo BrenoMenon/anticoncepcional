@@ -1,0 +1,1677 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+  <script>
+    window.OneSignalDeferred = window.OneSignalDeferred || [];
+    OneSignalDeferred.push(async function(OneSignal) {
+      await OneSignal.init({
+        appId: "1cf8eae6-da4e-4120-93a2-6bb6b6c71cc7",
+      });
+    });
+  </script>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Giovanna❤️">
+
+  <link rel="apple-touch-icon" href="app-icon.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="app-icon.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="app-icon.png">
+  <link rel="icon" type="image/png" href="faviconG-32x32.png">
+  <link rel="manifest" href="manifest.json">
+
+  <title>Giovanna❤️</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    :root {
+      --rose:        #ff8fa3;
+      --deep-rose:   #ff4d6d;
+      --soft-bg:     #fff5f6;
+      --border-pink: #ffb6c1;
+      --glass:       rgba(255, 255, 255, 0.97);
+
+      --q-dark-yellow:  #C8910A;
+      --q-medium-red:   #C0392B;
+      --q-light-yellow: #E8C213;
+      --q-dark-red:     #7B241C;
+      --q-white:        #F0F0F0;
+
+      --nav-h: 68px;
+      --safe-top: env(safe-area-inset-top, 0px);
+      --safe-bot: env(safe-area-inset-bottom, 0px);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
+      height: 100%;
+      width: 100%;
+      background: var(--soft-bg);
+      color: #444;
+      overflow: hidden;
+      position: fixed;
+    }
+
+    /* ============================
+       WELCOME SCREEN
+    ============================ */
+    #welcome-screen {
+      position: fixed;
+      inset: 0;
+      background: linear-gradient(160deg, #fff5f6 0%, #ffe4ea 100%);
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 30px 20px;
+      transition: transform 0.85s cubic-bezier(0.77, 0, 0.175, 1);
+      overflow: hidden;
+    }
+
+    .welcome-heart-bg {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .heart-float {
+      position: absolute;
+      font-size: 1.35rem;
+      animation: floatHeart 7.5s ease-in-out infinite;
+      opacity: 0.08;
+      user-select: none;
+    }
+
+    @keyframes floatHeart {
+      0%   { transform: translateY(0) rotate(-10deg); opacity: 0.05; }
+      50%  { transform: translateY(-18px) rotate(10deg); opacity: 0.12; }
+      100% { transform: translateY(0) rotate(-10deg); opacity: 0.05; }
+    }
+
+    .welcome-content {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .main-photo-wrapper {
+      width: 240px;
+      height: 310px;
+      border-radius: 35px;
+      overflow: hidden;
+      box-shadow: 0 20px 45px rgba(255, 77, 109, 0.28);
+      margin-bottom: 22px;
+      border: 7px solid var(--border-pink);
+      position: relative;
+      background: #fff;
+    }
+
+    .main-photo-wrapper img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .welcome-title {
+      font-family: 'Dancing Script', cursive;
+      font-size: 3.4rem;
+      color: var(--deep-rose);
+      line-height: 1;
+    }
+
+    .welcome-sub {
+      color: #aaa;
+      margin-top: 6px;
+      font-size: 0.88rem;
+      font-weight: 300;
+    }
+
+    .btn-enter {
+      margin-top: 28px;
+      padding: 17px 55px;
+      border-radius: 50px;
+      border: none;
+      background: linear-gradient(45deg, var(--rose), var(--deep-rose));
+      color: white;
+      font-weight: 700;
+      font-size: 1.05rem;
+      box-shadow: 0 12px 24px rgba(255, 77, 109, 0.32);
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s;
+      position: relative;
+      z-index: 3;
+    }
+
+    .btn-enter:active {
+      transform: scale(0.96);
+      box-shadow: 0 6px 12px rgba(255, 77, 109, 0.2);
+    }
+
+    /* ============================
+       APP SHELL
+    ============================ */
+    #app {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.75s ease;
+      pointer-events: none;
+    }
+
+    #app.fade-in {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: all;
+    }
+
+    /* ============================
+       HEADER
+    ============================ */
+    .app-header {
+      padding: calc(var(--safe-top) + 14px) 20px 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--glass);
+      border-bottom: 1px solid var(--border-pink);
+      flex-shrink: 0;
+    }
+
+    .app-header h1 {
+      font-family: 'Dancing Script', cursive;
+      font-size: 2.5rem;
+      color: var(--deep-rose);
+      line-height: 1;
+    }
+
+    .header-badge {
+      background: linear-gradient(45deg, var(--rose), var(--deep-rose));
+      color: white;
+      border-radius: 20px;
+      padding: 4px 14px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    /* ============================
+       SCROLL CONTENT
+    ============================ */
+    .app-content {
+      flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: 16px 16px calc(var(--nav-h) + 16px + var(--safe-bot));
+      -webkit-overflow-scrolling: touch;
+    }
+
+    /* ============================
+       TABS (VIEWS)
+    ============================ */
+    .view {
+      display: none;
+    }
+
+    .view.active {
+      display: block;
+    }
+
+    /* ============================
+       CARDS
+    ============================ */
+    .card {
+      background: var(--glass);
+      border-radius: 24px;
+      padding: 20px;
+      box-shadow: 0 8px 24px rgba(255, 143, 163, 0.12);
+      margin-bottom: 14px;
+    }
+
+    .card-title {
+      font-size: 0.7rem;
+      letter-spacing: 2px;
+      color: #bbb;
+      font-weight: 600;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    /* ============================
+       TODAY CARD (HOME)
+    ============================ */
+    .today-pill-display {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin: 12px 0;
+    }
+
+    .today-pill-circle {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: white;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.18);
+      flex-shrink: 0;
+      transition: transform 0.2s;
+    }
+
+    .today-pill-info h3 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #333;
+    }
+
+    .today-pill-info p {
+      font-size: 0.78rem;
+      color: #999;
+      margin-top: 2px;
+    }
+
+    .today-pill-day {
+      margin-left: auto;
+      text-align: center;
+      background: var(--soft-bg);
+      border-radius: 16px;
+      padding: 8px 14px;
+    }
+
+    .today-pill-day span {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--deep-rose);
+      display: block;
+      line-height: 1;
+    }
+
+    .today-pill-day small {
+      font-size: 0.65rem;
+      color: #bbb;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .btn-confirm {
+      width: 100%;
+      padding: 18px;
+      border-radius: 20px;
+      border: none;
+      background: linear-gradient(45deg, var(--rose), var(--deep-rose));
+      color: white;
+      font-weight: 700;
+      font-size: 1rem;
+      margin-top: 4px;
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(255, 77, 109, 0.25);
+      transition: transform 0.15s, box-shadow 0.15s, background 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn-confirm:active {
+      transform: scale(0.97);
+    }
+
+    .btn-confirm.taken {
+      background: linear-gradient(45deg, #81d4a0, #27ae60);
+      box-shadow: 0 8px 20px rgba(39, 174, 96, 0.25);
+    }
+
+    .cycle-progress-wrap {
+      margin-top: 6px;
+    }
+
+    .cycle-progress-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.75rem;
+      color: #aaa;
+      margin-bottom: 6px;
+    }
+
+    .cycle-progress-bar {
+      height: 8px;
+      background: #f0e0e5;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .cycle-progress-fill {
+      height: 100%;
+      border-radius: 10px;
+      background: linear-gradient(90deg, var(--rose), var(--deep-rose));
+      transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .streak-row {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 4px;
+    }
+
+    .streak-item {
+      flex: 1;
+      background: var(--soft-bg);
+      border-radius: 16px;
+      padding: 12px 8px;
+      text-align: center;
+    }
+
+    .streak-item .num {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--deep-rose);
+    }
+
+    .streak-item .lbl {
+      font-size: 0.65rem;
+      color: #bbb;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-top: 2px;
+    }
+
+    .time-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--soft-bg);
+      border-radius: 16px;
+      padding: 12px 16px;
+      margin-top: 8px;
+    }
+
+    .time-row i {
+      color: var(--rose);
+      flex-shrink: 0;
+    }
+
+    .time-input-styled {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: var(--deep-rose);
+      font-size: 1.8rem;
+      font-weight: 700;
+      outline: none;
+      font-family: 'Poppins', sans-serif;
+      width: 100px;
+    }
+
+    .btn-save-time {
+      background: linear-gradient(45deg, var(--rose), var(--deep-rose));
+      color: white;
+      border: none;
+      border-radius: 12px;
+      padding: 8px 18px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      cursor: pointer;
+    }
+
+    /* ============================
+       CARTELA VIEW — PILL GRID
+    ============================ */
+    .cartela-header {
+      text-align: center;
+      margin-bottom: 16px;
+    }
+
+    .cartela-header h2 {
+      font-family: 'Dancing Script', cursive;
+      font-size: 2rem;
+      color: var(--deep-rose);
+    }
+
+    .cartela-header p {
+      font-size: 0.8rem;
+      color: #aaa;
+      margin-top: 2px;
+    }
+
+    .pill-grid-wrap {
+      background: var(--glass);
+      border-radius: 24px;
+      padding: 20px 14px;
+      box-shadow: 0 8px 24px rgba(255, 143, 163, 0.12);
+      margin-bottom: 14px;
+    }
+
+    .pill-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 8px;
+    }
+
+    .pill-cell {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+      transition: transform 0.15s;
+    }
+
+    .pill-cell:active {
+      transform: scale(0.9);
+    }
+
+    .pill-bubble {
+      width: 100%;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.65rem;
+      font-weight: 700;
+      position: relative;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+      border: 2.5px solid transparent;
+    }
+
+    .pill-bubble.white-pill {
+      border-color: #ddd;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+    }
+
+    .pill-bubble.taken::after {
+      content: '✓';
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      font-weight: 900;
+      color: white;
+      background: rgba(39, 174, 96, 0.85);
+      border-radius: 50%;
+    }
+
+    .pill-bubble.taken.white-pill::after {
+      color: #2d7a4f;
+    }
+
+    .pill-bubble.today-pill {
+      box-shadow: 0 0 0 3.5px var(--deep-rose), 0 4px 14px rgba(255, 77, 109, 0.4);
+      transform: scale(1.1);
+    }
+
+    .pill-bubble.future {
+      opacity: 0.45;
+    }
+
+    .legend-wrap {
+      background: var(--glass);
+      border-radius: 24px;
+      padding: 16px 18px;
+      box-shadow: 0 8px 24px rgba(255, 143, 163, 0.1);
+      margin-bottom: 14px;
+    }
+
+    .legend-title {
+      font-size: 0.7rem;
+      letter-spacing: 2px;
+      color: #bbb;
+      font-weight: 600;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .legend-dot {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.12);
+    }
+
+    .legend-dot.white-pill {
+      border: 2px solid #ccc;
+      box-shadow: none;
+    }
+
+    .legend-info {
+      flex: 1;
+    }
+
+    .legend-info strong {
+      font-size: 0.8rem;
+      color: #444;
+      display: block;
+    }
+
+    .legend-info small {
+      font-size: 0.72rem;
+      color: #aaa;
+    }
+
+    .legend-badge {
+      font-size: 0.68rem;
+      font-weight: 700;
+      background: var(--soft-bg);
+      color: var(--deep-rose);
+      border-radius: 20px;
+      padding: 3px 10px;
+    }
+
+    /* ============================
+       CONFIGURAÇÕES VIEW
+    ============================ */
+    .settings-section {
+      margin-bottom: 18px;
+    }
+
+    .settings-section .card-title {
+      margin-bottom: 12px;
+    }
+
+    .setting-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 0;
+      border-bottom: 1px solid #f5e8ea;
+      gap: 14px;
+    }
+
+    .setting-row:last-child {
+      border-bottom: none;
+    }
+
+    .setting-row-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+      flex: 1;
+    }
+
+    .setting-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      background: var(--soft-bg);
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+    }
+
+    .setting-icon i {
+      color: var(--deep-rose);
+    }
+
+    .setting-row-left strong {
+      font-size: 0.88rem;
+      color: #333;
+      display: block;
+    }
+
+    .setting-row-left small {
+      font-size: 0.75rem;
+      color: #bbb;
+      display: block;
+    }
+
+    .toggle {
+      width: 46px;
+      height: 26px;
+      background: #e0e0e0;
+      border-radius: 13px;
+      position: relative;
+      cursor: pointer;
+      transition: background 0.3s;
+      flex-shrink: 0;
+    }
+
+    .toggle.on {
+      background: linear-gradient(45deg, var(--rose), var(--deep-rose));
+    }
+
+    .toggle::after {
+      content: '';
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 20px;
+      height: 20px;
+      background: white;
+      border-radius: 50%;
+      transition: left 0.3s;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    }
+
+    .toggle.on::after {
+      left: 23px;
+    }
+
+    .date-input {
+      background: var(--soft-bg);
+      border: none;
+      color: var(--deep-rose);
+      font-size: 1rem;
+      font-weight: 600;
+      border-radius: 12px;
+      padding: 8px 14px;
+      font-family: 'Poppins', sans-serif;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .btn-reset-cycle {
+      width: 100%;
+      padding: 14px;
+      border-radius: 18px;
+      border: 2px solid var(--border-pink);
+      background: transparent;
+      color: var(--deep-rose);
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn-reset-cycle:active {
+      background: var(--soft-bg);
+    }
+
+    /* ============================
+       DATE PICKER CUSTOM CENTRALIZADO
+    ============================ */
+    .date-picker-shell {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 56px;
+      width: 100%;
+      max-width: 210px;
+      padding: 0 16px;
+      border: 2px solid var(--border-pink);
+      border-radius: 16px;
+      background: var(--soft-bg);
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .date-picker-shell.compact {
+      min-height: 52px;
+    }
+
+    .date-picker-shell.modal-date-shell {
+      max-width: 100%;
+      width: 100%;
+      margin-bottom: 16px;
+    }
+
+    .date-picker-text {
+      width: 100%;
+      text-align: center;
+      color: var(--deep-rose);
+      font-size: 1rem;
+      font-weight: 600;
+      line-height: 1.2;
+      pointer-events: none;
+      user-select: none;
+      padding: 0 10px;
+    }
+
+    .date-picker-native {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      cursor: pointer;
+      border: none;
+      background: transparent;
+      appearance: none;
+      -webkit-appearance: none;
+    }
+
+    /* ============================
+       BOTTOM NAV
+    ============================ */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: calc(var(--nav-h) + var(--safe-bot));
+      background: var(--glass);
+      border-top: 1px solid var(--border-pink);
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-around;
+      padding-top: 8px;
+      z-index: 100;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+    }
+
+    .nav-btn {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      padding: 4px 0;
+      cursor: pointer;
+      border: none;
+      background: transparent;
+      color: #ccc;
+      transition: color 0.2s;
+      position: relative;
+    }
+
+    .nav-btn.active {
+      color: var(--deep-rose);
+    }
+
+    .nav-btn i {
+      transition: transform 0.2s;
+    }
+
+    .nav-btn.active i {
+      transform: scale(1.15);
+    }
+
+    .nav-btn span {
+      font-size: 0.62rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    .nav-btn.active::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      width: 30px;
+      height: 3px;
+      border-radius: 0 0 4px 4px;
+      background: linear-gradient(90deg, var(--rose), var(--deep-rose));
+    }
+
+    /* ============================
+       TOAST
+    ============================ */
+    .toast {
+      position: fixed;
+      bottom: calc(var(--nav-h) + 20px + var(--safe-bot));
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: #333;
+      color: white;
+      padding: 10px 22px;
+      border-radius: 50px;
+      font-size: 0.82rem;
+      font-weight: 500;
+      opacity: 0;
+      transition: all 0.3s;
+      z-index: 500;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* ============================
+       MODAL DE INÍCIO DE CICLO
+    ============================ */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+    }
+
+    .modal-overlay.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .modal-box {
+      background: white;
+      border-radius: 28px;
+      padding: 28px 24px;
+      width: 100%;
+      max-width: 360px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+      transform: scale(0.9);
+      transition: transform 0.3s;
+    }
+
+    .modal-overlay.open .modal-box {
+      transform: scale(1);
+    }
+
+    .modal-box h3 {
+      font-family: 'Dancing Script', cursive;
+      font-size: 1.8rem;
+      color: var(--deep-rose);
+      margin-bottom: 8px;
+    }
+
+    .modal-box p {
+      font-size: 0.85rem;
+      color: #888;
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+
+    .modal-date-label {
+      font-size: 0.75rem;
+      color: #aaa;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 6px;
+    }
+
+    .btn-modal-confirm {
+      width: 100%;
+      padding: 16px;
+      border-radius: 18px;
+      border: none;
+      background: linear-gradient(45deg, var(--rose), var(--deep-rose));
+      color: white;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(255, 77, 109, 0.25);
+    }
+
+    /* ============================
+       ANIMAÇÕES
+    ============================ */
+    @keyframes popIn {
+      from { transform: scale(0.7); opacity: 0; }
+      to   { transform: scale(1); opacity: 1; }
+    }
+
+    .pop-in {
+      animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    }
+
+    @keyframes pulse {
+      0%   { box-shadow: 0 0 0 0 rgba(255, 77, 109, 0.5); }
+      70%  { box-shadow: 0 0 0 10px rgba(255, 77, 109, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(255, 77, 109, 0); }
+    }
+
+    .pulse {
+      animation: pulse 2s infinite;
+    }
+
+    /* ============================
+       RESPONSIVO
+    ============================ */
+    @media (max-width: 768px) {
+      #view-config .settings-section .setting-row:first-of-type {
+        flex-direction: column;
+        align-items: stretch;
+        justify-content: flex-start;
+      }
+
+      #view-config .settings-section .setting-row:first-of-type .setting-row-left {
+        width: 100%;
+      }
+
+      #view-config .settings-section .setting-row:first-of-type .date-picker-shell {
+        width: 100%;
+        max-width: 100%;
+      }
+
+      .modal-box {
+        max-width: 380px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<section id="welcome-screen">
+  <div class="welcome-heart-bg">
+    <span class="heart-float" style="left:8%;top:10%;animation-delay:0s;font-size:1.55rem">💗</span>
+    <span class="heart-float" style="left:84%;top:12%;animation-delay:1.2s;font-size:1.05rem">💗</span>
+    <span class="heart-float" style="left:6%;top:29%;animation-delay:2.1s;font-size:1.2rem">💗</span>
+    <span class="heart-float" style="left:90%;top:34%;animation-delay:0.8s;font-size:1rem">💗</span>
+    <span class="heart-float" style="left:12%;top:82%;animation-delay:3.3s;font-size:1.2rem">💗</span>
+    <span class="heart-float" style="left:84%;top:85%;animation-delay:2.7s;font-size:1.3rem">💗</span>
+    <span class="heart-float" style="left:50%;top:8%;animation-delay:1.9s;font-size:1rem">💗</span>
+    <span class="heart-float" style="left:50%;top:92%;animation-delay:4.1s;font-size:1.1rem">💗</span>
+  </div>
+
+  <div class="welcome-content">
+    <div class="main-photo-wrapper">
+      <img src="img1.jpeg" alt="Giovanna">
+    </div>
+    <h1 class="welcome-title">Giovanna</h1>
+    <p class="welcome-sub">Cuide-se com amor, todos os dias. 🌸</p>
+    <button class="btn-enter" onclick="startApp()">Entrar no App ❤️</button>
+  </div>
+</section>
+
+<div id="app">
+  <header class="app-header">
+    <h1>Giovanna</h1>
+    <div class="header-badge" id="cycle-badge">Cartela 1</div>
+  </header>
+
+  <div class="app-content">
+    <div class="view active" id="view-home">
+      <div class="card">
+        <p class="card-title">Comprimido de Hoje</p>
+
+        <div class="today-pill-display">
+          <div class="today-pill-circle" id="today-pill-circle">1</div>
+          <div class="today-pill-info">
+            <h3 id="today-pill-name">—</h3>
+            <p id="today-pill-dose">—</p>
+          </div>
+          <div class="today-pill-day">
+            <span id="today-cycle-day">—</span>
+            <small>dia</small>
+          </div>
+        </div>
+
+        <button class="btn-confirm" id="confirm-btn" onclick="toggleTodayDose()">
+          <i data-lucide="pill" id="btn-icon"></i>
+          <span id="btn-text">Marcar como Tomado</span>
+        </button>
+      </div>
+
+      <div class="card">
+        <p class="card-title">Progresso da Cartela</p>
+        <div class="cycle-progress-wrap">
+          <div class="cycle-progress-label">
+            <span id="progress-text">Dia 0 de 28</span>
+            <span id="progress-pct">0%</span>
+          </div>
+          <div class="cycle-progress-bar">
+            <div class="cycle-progress-fill" id="progress-fill" style="width:0%"></div>
+          </div>
+        </div>
+
+        <div class="streak-row" style="margin-top:16px;">
+          <div class="streak-item">
+            <div class="num" id="streak-taken">0</div>
+            <div class="lbl">Tomados</div>
+          </div>
+          <div class="streak-item">
+            <div class="num" id="streak-missed">0</div>
+            <div class="lbl">Perdidos</div>
+          </div>
+          <div class="streak-item">
+            <div class="num" id="streak-remain">0</div>
+            <div class="lbl">Restantes</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <p class="card-title">Horário do Lembrete</p>
+        <div class="time-row">
+          <i data-lucide="bell" style="width:22px;height:22px;"></i>
+          <input
+            type="text"
+            id="time-input"
+            class="time-input-styled"
+            placeholder="21:00"
+            maxlength="5"
+            inputmode="numeric"
+          >
+          <button class="btn-save-time" onclick="saveTime()">Salvar</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="view" id="view-cartela">
+      <div class="cartela-header">
+        <h2>Minha Cartela</h2>
+        <p>Toque em qualquer comprimido para marcar</p>
+      </div>
+
+      <div class="pill-grid-wrap">
+        <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-bottom:6px;">
+          <div style="text-align:center;font-size:0.6rem;color:#ccc;font-weight:600;">Qua</div>
+          <div style="text-align:center;font-size:0.6rem;color:#ccc;font-weight:600;">Qui</div>
+          <div style="text-align:center;font-size:0.6rem;color:#ccc;font-weight:600;">Sex</div>
+          <div style="text-align:center;font-size:0.6rem;color:#ccc;font-weight:600;">Sáb</div>
+          <div style="text-align:center;font-size:0.6rem;color:#ccc;font-weight:600;">Dom</div>
+          <div style="text-align:center;font-size:0.6rem;color:#ccc;font-weight:600;">Seg</div>
+          <div style="text-align:center;font-size:0.6rem;color:#ccc;font-weight:600;">Ter</div>
+        </div>
+        <div class="pill-grid" id="pill-grid"></div>
+      </div>
+
+      <div class="legend-wrap">
+        <p class="legend-title">Legenda da Cartela</p>
+
+        <div class="legend-item">
+          <div class="legend-dot" style="background:#C8910A;"></div>
+          <div class="legend-info">
+            <strong>Amarelo Escuro</strong>
+            <small>Dias 1–2 · 3mg Valerato de Estradiol</small>
+          </div>
+          <span class="legend-badge">2 pills</span>
+        </div>
+
+        <div class="legend-item">
+          <div class="legend-dot" style="background:#C0392B;"></div>
+          <div class="legend-info">
+            <strong>Vermelho Médio</strong>
+            <small>Dias 3–7 · 2mg VE + 2mg Dienogeste</small>
+          </div>
+          <span class="legend-badge">5 pills</span>
+        </div>
+
+        <div class="legend-item">
+          <div class="legend-dot" style="background:#E8C213;"></div>
+          <div class="legend-info">
+            <strong>Amarelo Claro</strong>
+            <small>Dias 8–24 · 2mg VE + 3mg Dienogeste</small>
+          </div>
+          <span class="legend-badge">17 pills</span>
+        </div>
+
+        <div class="legend-item">
+          <div class="legend-dot" style="background:#7B241C;"></div>
+          <div class="legend-info">
+            <strong>Vermelho Escuro</strong>
+            <small>Dias 25–26 · 1mg Valerato de Estradiol</small>
+          </div>
+          <span class="legend-badge">2 pills</span>
+        </div>
+
+        <div class="legend-item">
+          <div class="legend-dot white-pill" style="background:#F0F0F0;"></div>
+          <div class="legend-info">
+            <strong>Branco (Inativo)</strong>
+            <small>Dias 27–28 · Comprimido Placebo</small>
+          </div>
+          <span class="legend-badge">2 pills</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="view" id="view-config">
+      <div class="card settings-section">
+        <p class="card-title">Ciclo Atual</p>
+
+        <div class="setting-row">
+          <div class="setting-row-left">
+            <div class="setting-icon"><i data-lucide="calendar-days"></i></div>
+            <div>
+              <strong>Início da Cartela</strong>
+              <small id="cfg-start-display">Não definido</small>
+            </div>
+          </div>
+
+          <div class="date-picker-shell compact">
+            <span class="date-picker-text" id="cfg-start-date-text">Selecionar data</span>
+            <input
+              type="date"
+              class="date-picker-native"
+              id="cfg-start-date"
+              onchange="updateCycleStart()"
+            >
+          </div>
+        </div>
+
+        <div class="setting-row">
+          <div class="setting-row-left">
+            <div class="setting-icon"><i data-lucide="refresh-ccw"></i></div>
+            <div>
+              <strong>Número da Cartela</strong>
+              <small id="cfg-cycle-num">Cartela 1</small>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <button onclick="changeCycleNum(-1)" style="width:30px;height:30px;border-radius:50%;border:2px solid var(--border-pink);background:transparent;color:var(--deep-rose);font-size:1.1rem;cursor:pointer;font-weight:700;">−</button>
+            <button onclick="changeCycleNum(1)"  style="width:30px;height:30px;border-radius:50%;border:2px solid var(--border-pink);background:transparent;color:var(--deep-rose);font-size:1.1rem;cursor:pointer;font-weight:700;">+</button>
+          </div>
+        </div>
+
+        <button class="btn-reset-cycle" onclick="confirmNewCycle()">
+          <i data-lucide="plus-circle"></i>
+          Iniciar Nova Cartela Hoje
+        </button>
+      </div>
+
+      <div class="card settings-section">
+        <p class="card-title">Notificações</p>
+
+        <div class="setting-row">
+          <div class="setting-row-left">
+            <div class="setting-icon"><i data-lucide="bell"></i></div>
+            <div>
+              <strong>Lembrete Diário</strong>
+              <small>Notificação no horário definido</small>
+            </div>
+          </div>
+          <div class="toggle on" id="notif-toggle" onclick="toggleNotif()"></div>
+        </div>
+
+        <div class="setting-row">
+          <div class="setting-row-left">
+            <div class="setting-icon"><i data-lucide="clock"></i></div>
+            <div>
+              <strong>Horário</strong>
+              <small id="cfg-time-display">21:00</small>
+            </div>
+          </div>
+          <input
+            type="text"
+            id="cfg-time-input"
+            class="date-input"
+            placeholder="21:00"
+            maxlength="5"
+            inputmode="numeric"
+            style="width:80px;text-align:center;"
+            onchange="saveTimeFromConfig()"
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <nav class="bottom-nav">
+    <button class="nav-btn active" id="nav-home" onclick="switchTab('home')">
+      <i data-lucide="home" style="width:22px;height:22px;"></i>
+      <span>Início</span>
+    </button>
+    <button class="nav-btn" id="nav-cartela" onclick="switchTab('cartela')">
+      <i data-lucide="grid-3x3" style="width:22px;height:22px;"></i>
+      <span>Cartela</span>
+    </button>
+    <button class="nav-btn" id="nav-config" onclick="switchTab('config')">
+      <i data-lucide="settings" style="width:22px;height:22px;"></i>
+      <span>Config</span>
+    </button>
+  </nav>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<div class="modal-overlay" id="modal-cycle">
+  <div class="modal-box">
+    <h3>Nova Cartela 🌸</h3>
+    <p>Informe a data em que você começou (ou vai começar) a nova cartela.</p>
+
+    <p class="modal-date-label">Data de início</p>
+
+    <div class="date-picker-shell modal-date-shell">
+      <span class="date-picker-text" id="modal-date-text">Selecionar data</span>
+      <input type="date" class="date-picker-native" id="modal-date">
+    </div>
+
+    <button class="btn-modal-confirm" onclick="confirmNewCycleModal()">Confirmar ❤️</button>
+  </div>
+</div>
+
+<script>
+  const QLAIRA = [
+    { bg:'#C8910A', text:'#fff',    name:'Amarelo Escuro',   dose:'3mg Valerato de Estradiol',    type:'dark-yellow'  },
+    { bg:'#C8910A', text:'#fff',    name:'Amarelo Escuro',   dose:'3mg Valerato de Estradiol',    type:'dark-yellow'  },
+
+    { bg:'#C0392B', text:'#fff',    name:'Vermelho Médio',   dose:'2mg VE + 2mg Dienogeste',      type:'medium-red'   },
+    { bg:'#C0392B', text:'#fff',    name:'Vermelho Médio',   dose:'2mg VE + 2mg Dienogeste',      type:'medium-red'   },
+    { bg:'#C0392B', text:'#fff',    name:'Vermelho Médio',   dose:'2mg VE + 2mg Dienogeste',      type:'medium-red'   },
+    { bg:'#C0392B', text:'#fff',    name:'Vermelho Médio',   dose:'2mg VE + 2mg Dienogeste',      type:'medium-red'   },
+    { bg:'#C0392B', text:'#fff',    name:'Vermelho Médio',   dose:'2mg VE + 2mg Dienogeste',      type:'medium-red'   },
+
+    { bg:'#E8C213', text:'#5a4a00', name:'Amarelo Claro',    dose:'2mg VE + 3mg Dienogeste',      type:'light-yellow' },
+    { bg:'#E8C213', text:'#5a4a00', name:'Amarelo Claro',    dose:'2mg VE + 3mg Dienogeste',      type:'light-yellow' },
+    { bg:'#E8C213', text:'#5a4a00', name:'Amarelo Claro',    dose:'2mg VE + 3mg Dienogeste',      type:'light-yellow' },
+    { bg:'#E8C213', text:'#5a4a00', name:'Amarelo Claro',    dose:'2mg VE + 3mg Dienogeste',      type:'light-yellow' },
+    { bg:'#E8C213', text:'#5a4a00', name:'Amarelo Claro',    dose:'2mg VE + 3mg Dienogeste',      type:'light-yellow' },
+    { bg:'#E8C213', text:'#5a4a00', name:'Amarelo Claro',    dose:'2mg VE + 3mg Dienogeste',      type:'light-yellow' },
+    { bg:'#E8C213', text:'#5a4a00', name:'Amarelo Claro',    dose:'2mg VE + 3mg Dienogeste',      type:'light-yellow' },
+    { bg:'#E8C213', text:'#5a4a00', name:'Amarelo Claro',    dose:'2mg VE + 3mg Dienogeste',      type:'light-yellow' },
+    { bg:'#E8C213', text:'#5a4a00', name:'Amarelo Claro',    dose:'2mg VE + 3mg Dienogeste',      type:'light-yellow' },
+    { bg:'#E8C213', text:'#5a4a00', name:'Amarelo Claro',    dose:'2mg VE + 3mg Dienogeste',      type:'light-yellow' },
+    { bg:'#E8C213', text:'#5a4a00', name:'Amarelo Claro',    dose:'2mg VE + 3mg Dienogeste',      type:'light-yellow' },
+    { bg:'#E8C213', text:'#5a4a00', name:'Amarelo Claro',    dose:'2mg VE + 3mg Dienogeste',      type:'light-yellow' },
+    { bg:'#E8C213', text:'#5a4a00', name:'Amarelo Claro',    dose:'2mg VE + 3mg Dienogeste',      type:'light-yellow' },
+    { bg:'#E8C213', text:'#5a4a00', name:'Amarelo Claro',    dose:'2mg VE + 3mg Dienogeste',      type:'light-yellow' },
+    { bg:'#E8C213', text:'#5a4a00', name:'Amarelo Claro',    dose:'2mg VE + 3mg Dienogeste',      type:'light-yellow' },
+    { bg:'#E8C213', text:'#5a4a00', name:'Amarelo Claro',    dose:'2mg VE + 3mg Dienogeste',      type:'light-yellow' },
+    { bg:'#E8C213', text:'#5a4a00', name:'Amarelo Claro',    dose:'2mg VE + 3mg Dienogeste',      type:'light-yellow' },
+
+    { bg:'#7B241C', text:'#fff',    name:'Vermelho Escuro',  dose:'1mg Valerato de Estradiol',    type:'dark-red'     },
+    { bg:'#7B241C', text:'#fff',    name:'Vermelho Escuro',  dose:'1mg Valerato de Estradiol',    type:'dark-red'     },
+
+    { bg:'#F0F0F0', text:'#aaa',    name:'Branco (Inativo)', dose:'Comprimido Placebo',           type:'white'        },
+    { bg:'#F0F0F0', text:'#aaa',    name:'Branco (Inativo)', dose:'Comprimido Placebo',           type:'white'        },
+  ];
+
+  let cycleStartDate = null;
+  let cycleNumber = parseInt(localStorage.getItem('cycle_number') || '1');
+  let savedTime = localStorage.getItem('pill_time') || '21:00';
+
+  function getCycleKey() {
+    if (!cycleStartDate) return 'default';
+    return cycleStartDate.toISOString().split('T')[0];
+  }
+
+  function toMidnight(d) {
+    return new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime();
+  }
+
+  function getDayOfCycle() {
+    if (!cycleStartDate) return null;
+    const now = new Date();
+    const diff = Math.floor((toMidnight(now) - toMidnight(cycleStartDate)) / 86400000);
+    if (diff < 0 || diff >= 28) return null;
+    return diff + 1;
+  }
+
+  function isTaken(dayNum) {
+    return !!localStorage.getItem(`taken_${getCycleKey()}_${dayNum}`);
+  }
+
+  function setTaken(dayNum, val) {
+    const key = `taken_${getCycleKey()}_${dayNum}`;
+    if (val) localStorage.setItem(key, '1');
+    else localStorage.removeItem(key);
+  }
+
+  function formatLongDate(dateObj) {
+    return dateObj.toLocaleDateString('pt-BR', {
+      day: '2-digit',
+      month: 'long',
+      year: 'numeric'
+    });
+  }
+
+  function formatShortDateFromValue(value) {
+    if (!value) return 'Selecionar data';
+    const [year, month, day] = value.split('-');
+    const date = new Date(Number(year), Number(month) - 1, Number(day));
+    return date.toLocaleDateString('pt-BR', {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric'
+    });
+  }
+
+  function updateDateText(inputId, textId, fallback = 'Selecionar data') {
+    const input = document.getElementById(inputId);
+    const text = document.getElementById(textId);
+    if (!input || !text) return;
+    text.textContent = input.value ? formatShortDateFromValue(input.value) : fallback;
+  }
+
+  function attachDateTextSync(inputId, textId, fallback = 'Selecionar data') {
+    const input = document.getElementById(inputId);
+    if (!input) return;
+    const sync = () => updateDateText(inputId, textId, fallback);
+    input.addEventListener('input', sync);
+    input.addEventListener('change', sync);
+    sync();
+  }
+
+  function initState() {
+    const saved = localStorage.getItem('cycle_start');
+    cycleStartDate = saved ? new Date(saved + 'T00:00:00') : null;
+    cycleNumber = parseInt(localStorage.getItem('cycle_number') || '1');
+    savedTime = localStorage.getItem('pill_time') || '21:00';
+
+    if (!cycleStartDate) {
+      setTimeout(() => openModal(), 600);
+    }
+  }
+
+  function startApp() {
+    document.getElementById('welcome-screen').style.transform = 'translateY(-100%)';
+    const app = document.getElementById('app');
+    app.classList.add('fade-in');
+    initState();
+    renderAll();
+    lucide.createIcons();
+  }
+
+  function renderAll() {
+    renderHome();
+    renderCartela();
+    renderConfig();
+  }
+
+  function renderHome() {
+    const dayNum = getDayOfCycle();
+    const btn = document.getElementById('confirm-btn');
+    const circle = document.getElementById('today-pill-circle');
+
+    document.getElementById('cycle-badge').textContent = `Cartela ${cycleNumber}`;
+    document.getElementById('time-input').value = savedTime;
+
+    if (dayNum === null) {
+      circle.style.background = '#ddd';
+      circle.style.color = '#999';
+      circle.textContent = '?';
+      circle.style.border = 'none';
+
+      document.getElementById('today-pill-name').textContent = cycleStartDate ? 'Ciclo concluído' : 'Ciclo não iniciado';
+      document.getElementById('today-pill-dose').textContent = 'Configure na aba Config';
+      document.getElementById('today-cycle-day').textContent = '—';
+
+      btn.className = 'btn-confirm';
+      document.getElementById('btn-text').textContent = 'Configure o ciclo';
+      btn.onclick = () => switchTab('config');
+
+      document.getElementById('progress-text').textContent = 'Dia 0 de 28';
+      document.getElementById('progress-pct').textContent = '0%';
+      document.getElementById('progress-fill').style.width = '0%';
+
+      renderStats(0, 0);
+      return;
+    }
+
+    btn.onclick = toggleTodayDose;
+
+    const pill = QLAIRA[dayNum - 1];
+    const taken = isTaken(dayNum);
+
+    circle.style.background = pill.bg;
+    circle.style.color = pill.text;
+    circle.textContent = dayNum;
+    circle.style.border = pill.type === 'white' ? '3px solid #ccc' : 'none';
+
+    document.getElementById('today-pill-name').textContent = pill.name;
+    document.getElementById('today-pill-dose').textContent = pill.dose;
+    document.getElementById('today-cycle-day').textContent = dayNum;
+
+    if (taken) {
+      btn.className = 'btn-confirm taken';
+      document.getElementById('btn-text').textContent = 'Dose Tomada! ✅';
+    } else {
+      btn.className = 'btn-confirm pulse';
+      document.getElementById('btn-text').textContent = 'Marcar como Tomado';
+    }
+
+    const pct = Math.round((dayNum / 28) * 100);
+    document.getElementById('progress-text').textContent = `Dia ${dayNum} de 28`;
+    document.getElementById('progress-pct').textContent = `${pct}%`;
+    document.getElementById('progress-fill').style.width = `${pct}%`;
+
+    let takenCount = 0;
+    let missedCount = 0;
+
+    for (let i = 1; i < dayNum; i++) {
+      if (isTaken(i)) takenCount++;
+      else missedCount++;
+    }
+
+    if (taken) takenCount++;
+
+    renderStats(takenCount, missedCount);
+  }
+
+  function renderStats(takenCount, missedCount) {
+    const dayNum = getDayOfCycle() || 0;
+    const remain = 28 - (dayNum > 0 ? dayNum : 0);
+
+    document.getElementById('streak-taken').textContent = takenCount;
+    document.getElementById('streak-missed').textContent = missedCount;
+    document.getElementById('streak-remain').textContent = Math.max(0, remain);
+  }
+
+  function renderCartela() {
+    const grid = document.getElementById('pill-grid');
+    const dayNum = getDayOfCycle();
+    grid.innerHTML = '';
+
+    QLAIRA.forEach((pill, i) => {
+      const d = i + 1;
+      const taken = isTaken(d);
+      const isToday = d === dayNum;
+      const isFuture = dayNum ? d > dayNum : true;
+      const isWhite = pill.type === 'white';
+
+      let classes = 'pill-bubble';
+      if (taken) classes += ' taken';
+      if (isToday) classes += ' today-pill';
+      if (isFuture && !taken) classes += ' future';
+      if (isWhite) classes += ' white-pill';
+
+      const cell = document.createElement('div');
+      cell.className = 'pill-cell';
+      cell.innerHTML = `
+        <div class="${classes}"
+             style="background:${pill.bg};color:${pill.text};"
+             onclick="togglePill(${d})">
+          <span style="font-size:0.6rem;font-weight:700;${taken ? 'opacity:0' : ''}">${d}</span>
+        </div>
+      `;
+      grid.appendChild(cell);
+    });
+  }
+
+  function renderConfig() {
+    document.getElementById('cfg-cycle-num').textContent = `Cartela ${cycleNumber}`;
+    document.getElementById('cfg-time-input').value = savedTime;
+    document.getElementById('cfg-time-display').textContent = savedTime;
+
+    const cfgDateInput = document.getElementById('cfg-start-date');
+
+    if (cycleStartDate) {
+      const iso = cycleStartDate.toISOString().split('T')[0];
+      cfgDateInput.value = iso;
+      document.getElementById('cfg-start-display').textContent = formatLongDate(cycleStartDate);
+      updateDateText('cfg-start-date', 'cfg-start-date-text');
+    } else {
+      cfgDateInput.value = '';
+      document.getElementById('cfg-start-display').textContent = 'Não definido';
+      document.getElementById('cfg-start-date-text').textContent = 'Selecionar data';
+    }
+  }
+
+  function toggleTodayDose() {
+    const dayNum = getDayOfCycle();
+    if (!dayNum) {
+      switchTab('config');
+      return;
+    }
+
+    const nowTaken = isTaken(dayNum);
+    setTaken(dayNum, !nowTaken);
+    showToast(nowTaken ? '❌ Desmarcado' : '✅ Dose registrada!');
+    renderAll();
+    lucide.createIcons();
+
+    const c = document.getElementById('today-pill-circle');
+    c.classList.remove('pop-in');
+    void c.offsetWidth;
+    c.classList.add('pop-in');
+  }
+
+  function togglePill(dayNum) {
+    const nowTaken = isTaken(dayNum);
+    setTaken(dayNum, !nowTaken);
+    showToast(nowTaken ? `Dia ${dayNum} desmarcado` : `Dia ${dayNum} ✅`);
+    renderAll();
+    lucide.createIcons();
+  }
+
+  function saveTime() {
+    const v = document.getElementById('time-input').value;
+    if (/^\d{2}:\d{2}$/.test(v)) {
+      savedTime = v;
+      localStorage.setItem('pill_time', v);
+      showToast(`⏰ Horário salvo: ${v}`);
+      renderConfig();
+    } else {
+      showToast('Formato inválido. Use HH:MM');
+    }
+  }
+
+  function saveTimeFromConfig() {
+    const v = document.getElementById('cfg-time-input').value;
+    if (/^\d{2}:\d{2}$/.test(v)) {
+      savedTime = v;
+      localStorage.setItem('pill_time', v);
+      showToast(`⏰ Horário salvo: ${v}`);
+      document.getElementById('cfg-time-display').textContent = v;
+      document.getElementById('time-input').value = v;
+    } else {
+      showToast('Formato inválido. Use HH:MM');
+    }
+  }
+
+  ['time-input', 'cfg-time-input'].forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+
+    el.addEventListener('input', (e) => {
+      let v = e.target.value.replace(/\D/g, '');
+      if (v.length >= 3) v = v.substring(0, 2) + ':' + v.substring(2, 4);
+      e.target.value = v;
+    });
+  });
+
+  function updateCycleStart() {
+    const val = document.getElementById('cfg-start-date').value;
+    if (!val) return;
+
+    cycleStartDate = new Date(val + 'T00:00:00');
+    localStorage.setItem('cycle_start', val);
+
+    updateDateText('cfg-start-date', 'cfg-start-date-text');
+    showToast('📅 Data atualizada!');
+    renderAll();
+    lucide.createIcons();
+  }
+
+  function changeCycleNum(delta) {
+    cycleNumber = Math.max(1, cycleNumber + delta);
+    localStorage.setItem('cycle_number', cycleNumber);
+    renderAll();
+    lucide.createIcons();
+    showToast(`Cartela ${cycleNumber}`);
+  }
+
+  function confirmNewCycle() {
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('modal-date').value = today;
+    updateDateText('modal-date', 'modal-date-text');
+    document.getElementById('modal-cycle').classList.add('open');
+  }
+
+  function confirmNewCycleModal() {
+    const val = document.getElementById('modal-date').value;
+    if (!val) {
+      showToast('Selecione uma data!');
+      return;
+    }
+
+    cycleStartDate = new Date(val + 'T00:00:00');
+    cycleNumber++;
+
+    localStorage.setItem('cycle_start', val);
+    localStorage.setItem('cycle_number', cycleNumber);
+
+    document.getElementById('modal-cycle').classList.remove('open');
+    showToast(`🌸 Cartela ${cycleNumber} iniciada!`);
+    renderAll();
+    lucide.createIcons();
+  }
+
+  function openModal() {
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('modal-date').value = today;
+    updateDateText('modal-date', 'modal-date-text');
+    document.getElementById('modal-cycle').classList.add('open');
+  }
+
+  document.getElementById('modal-cycle').addEventListener('click', function(e) {
+    if (e.target === this && cycleStartDate) {
+      this.classList.remove('open');
+    }
+  });
+
+  function toggleNotif() {
+    const t = document.getElementById('notif-toggle');
+    t.classList.toggle('on');
+    const isOn = t.classList.contains('on');
+    showToast(isOn ? '🔔 Notificações ativadas' : '🔕 Notificações desativadas');
+  }
+
+  function switchTab(tab) {
+    ['home', 'cartela', 'config'].forEach(t => {
+      document.getElementById(`view-${t}`).classList.toggle('active', t === tab);
+      document.getElementById(`nav-${t}`).classList.toggle('active', t === tab);
+    });
+
+    renderAll();
+    lucide.createIcons();
+  }
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(t._timer);
+    t._timer = setTimeout(() => t.classList.remove('show'), 2200);
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    attachDateTextSync('cfg-start-date', 'cfg-start-date-text');
+    attachDateTextSync('modal-date', 'modal-date-text');
+    lucide.createIcons();
+  });
+</script>
+</body>
+</html>
