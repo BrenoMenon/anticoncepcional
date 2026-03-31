@@ -981,9 +981,14 @@
   </style>
 </head>
 <body>
-  <button id="ativar-btn" style="padding: 20px; background: #28a745; color: white; border: none; border-radius: 10px; font-weight: bold; width: 100%; margin-bottom: 20px;" onclick="OneSignal.showNativePrompt()">
-   CLIQUE AQUI PARA ATIVAR NOTIFICAÇÕES
-</button>
+<div id="notification-card" style="display: none; position: fixed; top: 20px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 350px; background: white; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); padding: 20px; text-align: center; z-index: 9999; border: 2px solid #ff4bb4;">
+    <div style="font-size: 30px; margin-bottom: 10px;">🔔</div>
+    <h3 style="margin: 0; color: #ff4bb4;">Oi, meu amor! ❤️</h3>
+    <p style="color: #666; font-size: 14px; margin: 10px 0;">Ative as notificações para eu te lembrar da pílula às 21h!</p>
+    <button onclick="solicitarPermissao()" style="background: #ff4bb4; color: white; border: none; padding: 12px 25px; border-radius: 25px; font-weight: bold; cursor: pointer; width: 100%;">
+        Ativar agora
+    </button>
+</div>
 
 
 <section id="welcome-screen">
@@ -1671,30 +1676,39 @@
     t._timer = setTimeout(() => t.classList.remove('show'), 2200);
   }
 
+  // --- INICIALIZAÇÃO DO APP ---
   document.addEventListener('DOMContentLoaded', () => {
     attachDateTextSync('cfg-start-date', 'cfg-start-date-text');
     attachDateTextSync('modal-date', 'modal-date-text');
     lucide.createIcons();
-  });
-  function solicitarPermissao() {
-    // 1. Abre a janelinha oficial do OneSignal/Navegador
-    window.OneSignal = window.OneSignal || [];
-    OneSignal.push(function() {
-        OneSignal.showNativePrompt(); 
-    });
 
-    // 2. Esconde o seu card rosa bonitinho
+    // Mostra o card rosa se ela ainda não decidiu sobre as notificações
+    setTimeout(() => {
+      if (Notification.permission === "default") {
+        const card = document.getElementById('notification-card');
+        if (card) card.style.display = 'block';
+      }
+    }, 2500);
+  });
+
+  // --- FUNÇÕES DO CARD DE NOTIFICAÇÃO (ONESIGNAL V16) ---
+  function fecharCard() {
+    const card = document.getElementById('notification-card');
+    if (card) card.style.display = 'none';
+  }
+
+  function solicitarPermissao() {
     fecharCard();
-    
-    // 3. (Opcional) Log para você saber se deu certo no console
-    OneSignal.push(function() {
-        OneSignal.on('subscriptionChange', function (isSubscribed) {
-            if (isSubscribed) {
-                console.log("Inscrição confirmada no OneSignal! ❤️");
-            }
-        });
+
+    // Lógica correta para OneSignal v16 (OneSignalDeferred)
+    window.OneSignalDeferred = window.OneSignalDeferred || [];
+    OneSignalDeferred.push(async function(OneSignal) {
+      console.log("Solicitando permissão ao OneSignal...");
+      await OneSignal.Notifications.requestPermission();
     });
-}
+  }
+</script>
+
 
 </script>
 </body>
