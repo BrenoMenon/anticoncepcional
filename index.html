@@ -1676,6 +1676,26 @@
     attachDateTextSync('modal-date', 'modal-date-text');
     lucide.createIcons();
   });
+  function solicitarPermissao() {
+    // 1. Abre a janelinha oficial do OneSignal/Navegador
+    window.OneSignal = window.OneSignal || [];
+    OneSignal.push(function() {
+        OneSignal.showNativePrompt(); 
+    });
+
+    // 2. Esconde o seu card rosa bonitinho
+    fecharCard();
+    
+    // 3. (Opcional) Log para você saber se deu certo no console
+    OneSignal.push(function() {
+        OneSignal.on('subscriptionChange', function (isSubscribed) {
+            if (isSubscribed) {
+                console.log("Inscrição confirmada no OneSignal! ❤️");
+            }
+        });
+    });
+}
+
 </script>
 </body>
 </html>
