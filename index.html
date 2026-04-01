@@ -934,6 +934,71 @@
     }
 
     /* ============================
+       CARD DE NOTIFICAÇÃO (NOVO DESIGN)
+    ============================ */
+    #notification-card {
+      display: none;
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 90%;
+      max-width: 350px;
+      background: var(--glass);
+      border-radius: 24px;
+      box-shadow: 0 10px 30px rgba(255, 77, 109, 0.2);
+      padding: 24px;
+      text-align: center;
+      z-index: 9999;
+      border: 2px solid var(--border-pink);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+
+    #notification-card h3 {
+      margin: 0;
+      color: var(--deep-rose);
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.3rem;
+    }
+
+    #notification-card p {
+      color: #666;
+      font-size: 0.85rem;
+      margin: 10px 0 18px;
+    }
+
+    .btn-notif-activate {
+      background: linear-gradient(45deg, var(--rose), var(--deep-rose));
+      color: white;
+      border: none;
+      padding: 14px 25px;
+      border-radius: 25px;
+      font-weight: 700;
+      cursor: pointer;
+      width: 100%;
+      font-size: 1rem;
+      box-shadow: 0 6px 15px rgba(255, 77, 109, 0.25);
+      transition: transform 0.15s;
+    }
+
+    .btn-notif-activate:active {
+      transform: scale(0.96);
+    }
+
+    .btn-notif-cancel {
+      background: transparent;
+      color: #aaa;
+      border: none;
+      margin-top: 12px;
+      font-size: 0.75rem;
+      cursor: pointer;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* ============================
        ANIMAÇÕES
     ============================ */
     @keyframes popIn {
@@ -981,15 +1046,17 @@
   </style>
 </head>
 <body>
-<div id="notification-card" style="display: none; position: fixed; top: 20px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 350px; background: white; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); padding: 20px; text-align: center; z-index: 9999; border: 2px solid #ff4bb4;">
-    <div style="font-size: 30px; margin-bottom: 10px;">🔔</div>
-    <h3 style="margin: 0; color: #ff4bb4;">Oi, meu amor! ❤️</h3>
-    <p style="color: #666; font-size: 14px; margin: 10px 0;">Ative as notificações para eu te lembrar da pílula às 21h!</p>
-    <button onclick="solicitarPermissao()" style="background: #ff4bb4; color: white; border: none; padding: 12px 25px; border-radius: 25px; font-weight: bold; cursor: pointer; width: 100%;">
-        Ativar agora
-    </button>
-</div>
 
+<!-- Card de Permissão Personalizado (Design Atualizado) -->
+<div id="notification-card">
+    <div style="font-size: 34px; margin-bottom: 10px;">🔔</div>
+    <h3>Oi, meu amor! ❤️</h3>
+    <p>Ative as notificações para receber o alerta da pílula no horário certinho!</p>
+    <button class="btn-notif-activate" onclick="solicitarPermissao()">
+        Ativar notificações agora
+    </button>
+    <button class="btn-notif-cancel" onclick="fecharCard()">Depois eu ativo</button>
+</div>
 
 <section id="welcome-screen">
   <div class="welcome-heart-bg">
@@ -1298,7 +1365,6 @@
     { bg:'#E8C213', text:'#5a4a00', name:'Amarelo Claro',    dose:'2mg VE + 3mg Dienogeste',      type:'light-yellow' },
     { bg:'#E8C213', text:'#5a4a00', name:'Amarelo Claro',    dose:'2mg VE + 3mg Dienogeste',      type:'light-yellow' },
     { bg:'#E8C213', text:'#5a4a00', name:'Amarelo Claro',    dose:'2mg VE + 3mg Dienogeste',      type:'light-yellow' },
-    { bg:'#E8C213', text:'#5a4a00', name:'Amarelo Claro',    dose:'2mg VE + 3mg Dienogeste',      type:'light-yellow' },
 
     { bg:'#7B241C', text:'#fff',    name:'Vermelho Escuro',  dose:'1mg Valerato de Estradiol',    type:'dark-red'     },
     { bg:'#7B241C', text:'#fff',    name:'Vermelho Escuro',  dose:'1mg Valerato de Estradiol',    type:'dark-red'     },
@@ -1557,7 +1623,9 @@
 
   function saveTime() {
     const v = document.getElementById('time-input').value;
-    if (/^\d{2}:\d{2}$/.test(v)) {
+    // Usando RegExp constructor para evitar erros de quebra de linha no copy-paste
+    const regex = new RegExp('^\\d{2}:\\d{2}$');
+    if (regex.test(v)) {
       savedTime = v;
       localStorage.setItem('pill_time', v);
       showToast(`⏰ Horário salvo: ${v}`);
@@ -1569,7 +1637,9 @@
 
   function saveTimeFromConfig() {
     const v = document.getElementById('cfg-time-input').value;
-    if (/^\d{2}:\d{2}$/.test(v)) {
+    // Usando RegExp constructor para evitar erros de quebra de linha no copy-paste
+    const regex = new RegExp('^\\d{2}:\\d{2}$');
+    if (regex.test(v)) {
       savedTime = v;
       localStorage.setItem('pill_time', v);
       showToast(`⏰ Horário salvo: ${v}`);
@@ -1630,7 +1700,7 @@
     cycleNumber++;
 
     localStorage.setItem('cycle_start', val);
-    localStorage.setItem('cycle_number', cycleNumber);
+    localStorage.setItem('cycle_number', cycleNumber); // Corrigido: localStorage.setItem
 
     document.getElementById('modal-cycle').classList.remove('open');
     showToast(`🌸 Cartela ${cycleNumber} iniciada!`);
@@ -1704,12 +1774,14 @@
     window.OneSignalDeferred = window.OneSignalDeferred || [];
     OneSignalDeferred.push(async function(OneSignal) {
       console.log("Solicitando permissão ao OneSignal...");
-      await OneSignal.Notifications.requestPermission();
+      const permission = await OneSignal.Notifications.requestPermission();
+      if (permission) {
+        showToast('🔔 Notificações ativadas!');
+      } else {
+        showToast('🔕 Permissão de notificação negada.');
+      }
     });
   }
-</script>
-
-
 </script>
 </body>
 </html>
