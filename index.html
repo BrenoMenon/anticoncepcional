@@ -1748,38 +1748,35 @@
     }, 2500);
   });
 
-// ... (suas funções anteriores como switchTab, showToast, etc.)
-
-  // --- COLOQUE O CÓDIGO NOVO AQUI ABAIXO ---
+    // --- INICIALIZAÇÃO FINAL E NOTIFICAÇÕES ---
 
   document.addEventListener('DOMContentLoaded', () => {
-    // Sincroniza os textos de data que você já tem
     if (typeof attachDateTextSync === 'function') {
       attachDateTextSync('cfg-start-date', 'cfg-start-date-text');
       attachDateTextSync('modal-date', 'modal-date-text');
     }
-    
-    // Cria os ícones do Lucide
-    if (typeof lucide !== 'undefined') {
-      lucide.createIcons();
-    }
+    if (typeof lucide !== 'undefined') lucide.createIcons();
 
-    // Mostra o card rosa após 2 segundos se a permissão ainda for padrão
-    setTimeout(() => {
-      if (Notification.permission === "default") {
-        const card = document.getElementById('notification-card');
-        if (card) card.style.display = 'block';
-      }
-    }, 2000);
+    // Mostra o card rosa após 2 segundos se a permissão for padrão
+    setTimeout(verificarEExibirCard, 2000);
   });
 
-  // No iPhone/Safari, às vezes precisa de um toque na tela para liberar a função
+  // Força a exibição ao primeiro toque (essencial para Safari/iPhone)
   document.addEventListener('click', () => {
-    if (Notification.permission === "default") {
-      const card = document.getElementById('notification-card');
-      if (card) card.style.display = 'block';
-    }
+    verificarEExibirCard();
   }, { once: true });
+
+  function verificarEExibirCard() {
+    const card = document.getElementById('notification-card');
+    if (!card) return;
+
+    // Só exibe se a permissão ainda não foi decidida ("default")
+    if (Notification.permission === "default") {
+      card.style.display = 'block';
+    } else {
+      card.style.display = 'none';
+    }
+  }
 
   function fecharCard() {
     const card = document.getElementById('notification-card');
@@ -1787,17 +1784,28 @@
   }
 
   function solicitarPermissao() {
+    // 1. Se já estiver bloqueado no sistema, avisa o usuário como resetar
+    if (Notification.permission === "denied") {
+      alert("Amor, as notificações estão bloqueadas no seu Safari. 🚫\n\nPara ativar: vá em Ajustes > Safari > Notificações e permita este site, ou apague o ícone da tela inicial e adicione de novo!");
+      fecharCard();
+      return;
+    }
+
     fecharCard();
 
+    // 2. Chama o OneSignal v16 corretamente
     window.OneSignalDeferred = window.OneSignalDeferred || [];
     OneSignalDeferred.push(async function(OneSignal) {
-      console.log("Solicitando permissão ao OneSignal...");
-      const permission = await OneSignal.Notifications.requestPermission();
-      
-      if (permission) {
-        if (typeof showToast === 'function') showToast('🔔 Notificações ativadas!');
-      } else {
-        if (typeof showToast === 'function') showToast('🔕 Permissão negada.');
+      try {
+        console.log("Chamando prompt oficial do OneSignal...");
+        await OneSignal.Notifications.requestPermission();
+        
+        // Verifica o status após a interação
+        if (Notification.permission === "granted") {
+          if (typeof showToast === 'function') showToast('🔔 Notificações ativadas! ❤️');
+        }
+      } catch (err) {
+        console.error("Erro ao solicitar permissão:", err);
       }
     });
   }
