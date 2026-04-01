@@ -1,15 +1,18 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
-  <script>
-    window.OneSignalDeferred = window.OneSignalDeferred || [];
-    OneSignalDeferred.push(async function(OneSignal) {
-      await OneSignal.init({
-        appId: "1cf8eae6-da4e-4120-93a2-6bb6b6c71cc7",
-      });
+<script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+<script>
+  window.OneSignalDeferred = window.OneSignalDeferred || [];
+  OneSignalDeferred.push(async function(OneSignal) {
+    await OneSignal.init({
+      appId: "1cf8eae6-da4e-4120-93a2-6bb6b6c71cc7",
+      serviceWorkerPath: "BrenoMenon/anticoncepcional/OneSignalSDKWorker.js",
+      serviceWorkerParam: { scope: "BrenoMenon/anticoncepcional" },
     });
-  </script>
+  });
+</script>
+
 
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -986,18 +989,6 @@
       transform: scale(0.96);
     }
 
-    .btn-notif-cancel {
-      background: transparent;
-      color: #aaa;
-      border: none;
-      margin-top: 12px;
-      font-size: 0.75rem;
-      cursor: pointer;
-      font-weight: 500;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-
     /* ============================
        ANIMAÇÕES
     ============================ */
@@ -1047,7 +1038,7 @@
 </head>
 <body>
 
-<!-- Card de Permissão Personalizado (Design Atualizado) -->
+<!-- Card de Permissão Personalizado -->
 <div id="notification-card">
     <div style="font-size: 34px; margin-bottom: 10px;">🔔</div>
     <h3>Oi, meu amor! ❤️</h3>
@@ -1055,7 +1046,6 @@
     <button class="btn-notif-activate" onclick="solicitarPermissao()">
         Ativar notificações agora
     </button>
-    <button class="btn-notif-cancel" onclick="fecharCard()">Depois eu ativo</button>
 </div>
 
 <section id="welcome-screen">
@@ -1623,7 +1613,6 @@
 
   function saveTime() {
     const v = document.getElementById('time-input').value;
-    // Usando RegExp constructor para evitar erros de quebra de linha no copy-paste
     const regex = new RegExp('^\\d{2}:\\d{2}$');
     if (regex.test(v)) {
       savedTime = v;
@@ -1637,7 +1626,6 @@
 
   function saveTimeFromConfig() {
     const v = document.getElementById('cfg-time-input').value;
-    // Usando RegExp constructor para evitar erros de quebra de linha no copy-paste
     const regex = new RegExp('^\\d{2}:\\d{2}$');
     if (regex.test(v)) {
       savedTime = v;
@@ -1700,7 +1688,7 @@
     cycleNumber++;
 
     localStorage.setItem('cycle_start', val);
-    localStorage.setItem('cycle_number', cycleNumber); // Corrigido: localStorage.setItem
+    localStorage.setItem('cycle_number', cycleNumber);
 
     document.getElementById('modal-cycle').classList.remove('open');
     showToast(`🌸 Cartela ${cycleNumber} iniciada!`);
@@ -1752,7 +1740,6 @@
     attachDateTextSync('modal-date', 'modal-date-text');
     lucide.createIcons();
 
-    // Mostra o card rosa se ela ainda não decidiu sobre as notificações
     setTimeout(() => {
       if (Notification.permission === "default") {
         const card = document.getElementById('notification-card');
@@ -1770,7 +1757,6 @@
   function solicitarPermissao() {
     fecharCard();
 
-    // Lógica correta para OneSignal v16 (OneSignalDeferred)
     window.OneSignalDeferred = window.OneSignalDeferred || [];
     OneSignalDeferred.push(async function(OneSignal) {
       console.log("Solicitando permissão ao OneSignal...");
