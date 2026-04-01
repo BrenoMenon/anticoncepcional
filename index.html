@@ -1734,49 +1734,34 @@
     t._timer = setTimeout(() => t.classList.remove('show'), 2200);
   }
 
-  // --- INICIALIZAÇÃO DO APP ---
-  document.addEventListener('DOMContentLoaded', () => {
-    attachDateTextSync('cfg-start-date', 'cfg-start-date-text');
-    attachDateTextSync('modal-date', 'modal-date-text');
-    lucide.createIcons();
-
-    setTimeout(() => {
-      if (Notification.permission === "default") {
-        const card = document.getElementById('notification-card');
-        if (card) card.style.display = 'block';
-      }
-    }, 2500);
-  });
-
-    // --- INICIALIZAÇÃO FINAL E NOTIFICAÇÕES ---
-
-  document.addEventListener('DOMContentLoaded', () => {
-    if (typeof attachDateTextSync === 'function') {
-      attachDateTextSync('cfg-start-date', 'cfg-start-date-text');
-      attachDateTextSync('modal-date', 'modal-date-text');
-    }
-    if (typeof lucide !== 'undefined') lucide.createIcons();
-
-    // Mostra o card rosa após 2 segundos se a permissão for padrão
-    setTimeout(verificarEExibirCard, 2000);
-  });
-
-  // Força a exibição ao primeiro toque (essencial para Safari/iPhone)
-  document.addEventListener('click', () => {
-    verificarEExibirCard();
-  }, { once: true });
+  // --- FINAL DO ARQUIVO: INICIALIZAÇÃO E NOTIFICAÇÕES (ONESIGNAL V16) ---
 
   function verificarEExibirCard() {
     const card = document.getElementById('notification-card');
     if (!card) return;
 
-    // Só exibe se a permissão ainda não foi decidida ("default")
-    if (Notification.permission === "default") {
+    // No iOS/Safari, a propriedade Notification só existe se o app estiver instalado na tela de início
+    if (window.Notification && Notification.permission === "default") {
       card.style.display = 'block';
-    } else {
+    } else if (Notification.permission === "granted") {
       card.style.display = 'none';
     }
   }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    // Sincronização de datas e ícones
+    attachDateTextSync('cfg-start-date', 'cfg-start-date-text');
+    attachDateTextSync('modal-date', 'modal-date-text');
+    if (typeof lucide !== 'undefined') lucide.createIcons();
+
+    // Tenta mostrar o card após 2 segundos
+    setTimeout(verificarEExibirCard, 2000);
+  });
+
+  // Essencial para iPhone: O Safari exige um toque na tela para liberar o sistema de notificações
+  document.addEventListener('click', () => {
+    verificarEExibirCard();
+  }, { once: true });
 
   function fecharCard() {
     const card = document.getElementById('notification-card');
@@ -1784,31 +1769,32 @@
   }
 
   function solicitarPermissao() {
-    // 1. Se já estiver bloqueado no sistema, avisa o usuário como resetar
-    if (Notification.permission === "denied") {
-      alert("Amor, as notificações estão bloqueadas no seu Safari. 🚫\n\nPara ativar: vá em Ajustes > Safari > Notificações e permita este site, ou apague o ícone da tela inicial e adicione de novo!");
+    // 1. Se já estiver bloqueado, avisa como resetar
+    if (window.Notification && Notification.permission === "denied") {
+      alert("Amor, as notificações estão bloqueadas no seu Safari. 🚫\n\nPara ativar: vá em Ajustes > Safari > Notificações e permita o site, ou apague o ícone da tela inicial e adicione de novo!");
       fecharCard();
       return;
     }
 
     fecharCard();
 
-    // 2. Chama o OneSignal v16 corretamente
+    // 2. Chamada oficial para OneSignal v16
     window.OneSignalDeferred = window.OneSignalDeferred || [];
     OneSignalDeferred.push(async function(OneSignal) {
+      console.log("Iniciando solicitação OneSignal v16...");
       try {
-        console.log("Chamando prompt oficial do OneSignal...");
+        // Isso força o iPhone a mostrar a janelinha de "Permitir"
         await OneSignal.Notifications.requestPermission();
         
-        // Verifica o status após a interação
         if (Notification.permission === "granted") {
-          if (typeof showToast === 'function') showToast('🔔 Notificações ativadas! ❤️');
+          showToast('🔔 Notificações ativadas! ❤️');
         }
       } catch (err) {
-        console.error("Erro ao solicitar permissão:", err);
+        console.error("Erro OneSignal:", err);
       }
     });
   }
+</script>
 
 </script>
 </body>
