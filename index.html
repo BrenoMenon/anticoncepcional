@@ -1748,7 +1748,39 @@
     }, 2500);
   });
 
-  // --- FUNÇÕES DO CARD DE NOTIFICAÇÃO (ONESIGNAL V16) ---
+// ... (suas funções anteriores como switchTab, showToast, etc.)
+
+  // --- COLOQUE O CÓDIGO NOVO AQUI ABAIXO ---
+
+  document.addEventListener('DOMContentLoaded', () => {
+    // Sincroniza os textos de data que você já tem
+    if (typeof attachDateTextSync === 'function') {
+      attachDateTextSync('cfg-start-date', 'cfg-start-date-text');
+      attachDateTextSync('modal-date', 'modal-date-text');
+    }
+    
+    // Cria os ícones do Lucide
+    if (typeof lucide !== 'undefined') {
+      lucide.createIcons();
+    }
+
+    // Mostra o card rosa após 2 segundos se a permissão ainda for padrão
+    setTimeout(() => {
+      if (Notification.permission === "default") {
+        const card = document.getElementById('notification-card');
+        if (card) card.style.display = 'block';
+      }
+    }, 2000);
+  });
+
+  // No iPhone/Safari, às vezes precisa de um toque na tela para liberar a função
+  document.addEventListener('click', () => {
+    if (Notification.permission === "default") {
+      const card = document.getElementById('notification-card');
+      if (card) card.style.display = 'block';
+    }
+  }, { once: true });
+
   function fecharCard() {
     const card = document.getElementById('notification-card');
     if (card) card.style.display = 'none';
@@ -1761,13 +1793,15 @@
     OneSignalDeferred.push(async function(OneSignal) {
       console.log("Solicitando permissão ao OneSignal...");
       const permission = await OneSignal.Notifications.requestPermission();
+      
       if (permission) {
-        showToast('🔔 Notificações ativadas!');
+        if (typeof showToast === 'function') showToast('🔔 Notificações ativadas!');
       } else {
-        showToast('🔕 Permissão de notificação negada.');
+        if (typeof showToast === 'function') showToast('🔕 Permissão negada.');
       }
     });
   }
+
 </script>
 </body>
 </html>
