@@ -1355,6 +1355,7 @@
     { bg:'#E8C213', text:'#5a4a00', name:'Amarelo Claro',    dose:'2mg VE + 3mg Dienogeste',      type:'light-yellow' },
     { bg:'#E8C213', text:'#5a4a00', name:'Amarelo Claro',    dose:'2mg VE + 3mg Dienogeste',      type:'light-yellow' },
     { bg:'#E8C213', text:'#5a4a00', name:'Amarelo Claro',    dose:'2mg VE + 3mg Dienogeste',      type:'light-yellow' },
+    { bg:'#E8C213', text:'#5a4a00', name:'Amarelo Claro',    dose:'2mg VE + 3mg Dienogeste',      type:'light-yellow' },
 
     { bg:'#7B241C', text:'#fff',    name:'Vermelho Escuro',  dose:'1mg Valerato de Estradiol',    type:'dark-red'     },
     { bg:'#7B241C', text:'#fff',    name:'Vermelho Escuro',  dose:'1mg Valerato de Estradiol',    type:'dark-red'     },
@@ -1613,8 +1614,7 @@
 
   function saveTime() {
     const v = document.getElementById('time-input').value;
-    const regex = new RegExp('^\\d{2}:\\d{2}$');
-    if (regex.test(v)) {
+    if (/^\d{2}:\d{2}$/.test(v)) {
       savedTime = v;
       localStorage.setItem('pill_time', v);
       showToast(`⏰ Horário salvo: ${v}`);
@@ -1626,8 +1626,7 @@
 
   function saveTimeFromConfig() {
     const v = document.getElementById('cfg-time-input').value;
-    const regex = new RegExp('^\\d{2}:\\d{2}$');
-    if (regex.test(v)) {
+    if (/^\d{2}:\d{2}$/.test(v)) {
       savedTime = v;
       localStorage.setItem('pill_time', v);
       showToast(`⏰ Horário salvo: ${v}`);
@@ -1734,68 +1733,11 @@
     t._timer = setTimeout(() => t.classList.remove('show'), 2200);
   }
 
-  // --- FINAL DO ARQUIVO: INICIALIZAÇÃO E NOTIFICAÇÕES (ONESIGNAL V16) ---
-
-  function verificarEExibirCard() {
-    const card = document.getElementById('notification-card');
-    if (!card) return;
-
-    // No iOS/Safari, a propriedade Notification só existe se o app estiver instalado na tela de início
-    if (window.Notification && Notification.permission === "default") {
-      card.style.display = 'block';
-    } else if (Notification.permission === "granted") {
-      card.style.display = 'none';
-    }
-  }
-
   document.addEventListener('DOMContentLoaded', () => {
-    // Sincronização de datas e ícones
     attachDateTextSync('cfg-start-date', 'cfg-start-date-text');
     attachDateTextSync('modal-date', 'modal-date-text');
-    if (typeof lucide !== 'undefined') lucide.createIcons();
-
-    // Tenta mostrar o card após 2 segundos
-    setTimeout(verificarEExibirCard, 2000);
+    lucide.createIcons();
   });
-
-  // Essencial para iPhone: O Safari exige um toque na tela para liberar o sistema de notificações
-  document.addEventListener('click', () => {
-    verificarEExibirCard();
-  }, { once: true });
-
-  function fecharCard() {
-    const card = document.getElementById('notification-card');
-    if (card) card.style.display = 'none';
-  }
-
-  function solicitarPermissao() {
-    // 1. Se já estiver bloqueado, avisa como resetar
-    if (window.Notification && Notification.permission === "denied") {
-      alert("Amor, as notificações estão bloqueadas no seu Safari. 🚫\n\nPara ativar: vá em Ajustes > Safari > Notificações e permita o site, ou apague o ícone da tela inicial e adicione de novo!");
-      fecharCard();
-      return;
-    }
-
-    fecharCard();
-
-    // 2. Chamada oficial para OneSignal v16
-    window.OneSignalDeferred = window.OneSignalDeferred || [];
-    OneSignalDeferred.push(async function(OneSignal) {
-      console.log("Iniciando solicitação OneSignal v16...");
-      try {
-        // Isso força o iPhone a mostrar a janelinha de "Permitir"
-        await OneSignal.Notifications.requestPermission();
-        
-        if (Notification.permission === "granted") {
-          showToast('🔔 Notificações ativadas! ❤️');
-        }
-      } catch (err) {
-        console.error("Erro OneSignal:", err);
-      }
-    });
-  }
-</script>
-
 </script>
 </body>
 </html>
